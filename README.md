@@ -1,5 +1,5 @@
 
-## Blender-OpenComputers-3DM-Exporter<br/>Minecraft OpenComputers 3DM (print3d) Exporter
+## Blender-OpenComputers-3DM-Exporter<br/>Blender Minecraft OpenComputers 3DM (print3d) Exporter
 
 ### Copyright
 
