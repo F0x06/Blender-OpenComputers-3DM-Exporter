@@ -1,6 +1,8 @@
 
 ## Blender-OpenComputers-3DM-Exporter<br/>Blender Minecraft OpenComputers 3DM (print3d) Exporter
 
+[Official OpenComputers forum post](https://oc.cil.li/index.php?/topic/817-blender-3dm-print3d-exporter/)
+
 ### Copyright
 
 Copyright (c) 2016 Kevin Velickovic<br />
