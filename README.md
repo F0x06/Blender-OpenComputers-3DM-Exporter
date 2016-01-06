@@ -33,7 +33,7 @@ Activate plugin:
 
 ### Usage
 
-* Create a model only with cubes, the total area covered by cubes can be 16 x 16 x 16 units max, you can use the "Bounding box" option of the plugin to view the build area, goto Scene properties -> OpenComputers 3DM Exporter -> Bounding box, and push the "Add" button, and build only inside the bounding box
+* Create a model only with cubes, cubes sizes must be a power of 2 and the total area covered by cubes can be 16 x 16 x 16 units max, you can use the "Bounding box" option of the plugin to view the build area, goto Scene properties -> OpenComputers 3DM Exporter -> Bounding box, and push the "Add" button, and build only inside the bounding box
 
 * Export you 3DM file, goto Scene properties -> OpenComputers 3DM Exporter and push the "Export" button, chose a destination file name, and push the "Export" button
 
