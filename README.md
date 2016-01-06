@@ -9,7 +9,7 @@ Please read the [COPYRIGHT.md](COPYRIGHT.md) file for more information.
 
 ### Requirements
 
-This Add-on requires Blender 2.76
+This plugin requires Blender 2.76
 
 ### Installation
 
