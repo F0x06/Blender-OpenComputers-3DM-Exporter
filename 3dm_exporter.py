@@ -168,6 +168,18 @@ class f0x_export_mc3d(bpy.types.Operator):
         context.window_manager.fileselect_add(self)
         return {'RUNNING_MODAL'}
 
+# Function to get selected object
+def get_selected():
+    
+    # Iterate over scene objects
+    for _obj in bpy.data.objects:
+        
+        # Check if object is valid and selected
+        if _obj and _obj.select:
+            
+            # Return result
+            return _obj
+
 # Function to find bounding box
 def bb_find():
 
@@ -198,7 +210,7 @@ class f0x_bb_add(bpy.types.Operator):
 
         # Create a cube
         bpy.ops.mesh.primitive_cube_add(location=(0,0,8))
-        added_cube = bpy.data.objects[-1]
+        added_cube = get_selected()
 
         # Cube settings
         added_cube.dimensions = [ 16, 16, 16 ]
