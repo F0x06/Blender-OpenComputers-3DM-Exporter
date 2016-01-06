@@ -1,7 +1,7 @@
 
 ## Copyright
 
-Blender-OpenComputers-3DM-Exporter - Minecraft OpenComputers 3DM (print3d) Exporter<br />
+Blender-OpenComputers-3DM-Exporter - Blender Minecraft OpenComputers 3DM (print3d) Exporter<br />
 
 Copyright (c) 2016 Kevin Velickovic<br />
 
