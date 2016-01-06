@@ -180,6 +180,18 @@ def get_selected():
             # Return result
             return _obj
 
+# Function to deselect all object
+def deselect_all():
+    
+    # Iterate over scene objects
+    for _obj in bpy.data.objects:
+        
+        # Check if object is valid
+        if _obj:
+            
+            # Deselect object
+            _obj.select = False
+
 # Function to find bounding box
 def bb_find():
 
@@ -204,10 +216,13 @@ class f0x_bb_add(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return ( bb_find() == None )
+        return ( bb_find() == None ) and ( bpy.context.active_object.mode == 'OBJECT' )
 
     def execute(self, context):
-
+        
+        # Deselect all objects
+        deselect_all()
+        
         # Create a cube
         bpy.ops.mesh.primitive_cube_add(location=(0,0,8))
         added_cube = get_selected()
@@ -240,9 +255,12 @@ class f0x_bb_remove(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return ( bb_find() != None )
+        return ( bb_find() != None ) and ( bpy.context.active_object.mode == 'OBJECT' )
 
     def execute(self, context):
+
+        # Deselect all objects
+        deselect_all()
 
         # Find bounding box
         bbox = bb_find()
