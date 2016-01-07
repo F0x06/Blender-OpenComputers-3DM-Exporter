@@ -32,9 +32,7 @@
 
 # Imports
 import bpy
-import bgl
-from bpy.props import StringProperty
-import mathutils
+from bpy.props import ( StringProperty, BoolProperty, IntProperty )
 
 # Plugin details
 bl_info = {
@@ -49,6 +47,51 @@ bl_info = {
     'tracker_url': '',
     'support': 'COMMUNITY',
     'category': 'Exporter'}
+
+# Function to initialize properties
+def initProps():
+    
+    # Object export settings
+    bpy.types.Scene.f0x_3dm_tint_param = BoolProperty(
+        name="Export tints ( diffuse color )",
+        description="",
+        default = True )        
+
+    # 3DM model export settings
+    bpy.types.Scene.f0x_3dm_label_param = StringProperty(
+        name="Label",
+        default = "" )
+    bpy.types.Scene.f0x_3dm_tooltip_param = StringProperty(
+        name="Tooltip",
+        default = "" )  
+    bpy.types.Scene.f0x_3dm_lightlevel_param = IntProperty(
+        name="Light level",
+        default = 0,
+        min = 0,
+        max = 8 )  
+    bpy.types.Scene.f0x_3dm_emitredstone_param = BoolProperty(
+        name="Emit redstone",
+        default = False )  
+    bpy.types.Scene.f0x_3dm_buttonmode_param = BoolProperty(
+        name="Button mode",
+        default = False )  
+    bpy.types.Scene.f0x_3dm_collidable_param = BoolProperty(
+        name="Collidable",
+        default = True )  
+        
+# Function to unload properties
+def unloadProps():
+    
+    # Object export settings
+    del bpy.types.Scene.f0x_3dm_tint_param
+
+    # 3DM model export settings
+    del bpy.types.Scene.f0x_3dm_label_param
+    del bpy.types.Scene.f0x_3dm_tooltip_param 
+    del bpy.types.Scene.f0x_3dm_lightlevel_param  
+    del bpy.types.Scene.f0x_3dm_emitredstone_param 
+    del bpy.types.Scene.f0x_3dm_buttonmode_param
+    del bpy.types.Scene.f0x_3dm_collidable_param
 
 # Function to calculate bottom vertex coordinates
 def get_bottom_vertex( _obj ):
@@ -103,14 +146,23 @@ def get_top_vertex( _obj ):
     ]
 
 # Function to generate 3DM file
-def generate_mc3d_file( file_path ):
+def generate_3dm_file( file_path ):
+
+    # Scene container
+    scene = bpy.context.scene
 
     # Open output file
     with open( file_path, "w" ) as output_file:
 
         # Write 3DM header
         output_file.write("{\n")
-        output_file.write("    label = \"%s\",\n" % ( bpy.path.display_name_from_filepath( bpy.data.filepath ) ) )
+        output_file.write("    label = \"%s\",\n"    % ( scene.f0x_3dm_label_param ) )
+        output_file.write("    tooltip = \"%s\",\n"  % ( scene.f0x_3dm_tooltip_param ) )
+        output_file.write("    lightLevel = %d,\n"   % ( scene.f0x_3dm_lightlevel_param ) )
+        output_file.write("    emitRedstone = %s,\n" % ( "True" if scene.f0x_3dm_emitredstone_param else "False" ) )
+        output_file.write("    buttonMode = %s,\n"   % ( "True" if scene.f0x_3dm_buttonmode_param else "False" ) )
+        output_file.write("    collidable = %s,\n"   % ( "True" if scene.f0x_3dm_collidable_param else "False" ) )
+        
         output_file.write("    shapes={\n")
 
         # Iterate over scene objects
@@ -132,12 +184,27 @@ def generate_mc3d_file( file_path ):
                     # Compute world coordinates of corners and align them to 3DM start position
                     bot_corner_pos = get_bottom_vertex( _obj )
                     top_corner_pos = get_top_vertex( _obj )
+                    
+                    # Tint variable
+                    object_tint = '0x000000'
+                    
+                    # Check if object have material
+                    if _obj.active_material:
+                        
+                        # Check for default diffuse color
+                        if _obj.active_material.diffuse_color.hsv != (0.0, 0.0, 0.800000011920929):
+                            
+                            # Get object tint ( diffuse color )
+                            object_tint = '0x%02x%02x%02x' % ( round( _obj.active_material.diffuse_color.r * 255.0 ),
+                            round( _obj.active_material.diffuse_color.g * 255.0 ),
+                            round( _obj.active_material.diffuse_color.b * 255.0 ) )
 
                     # Write block data to 3DM file
-                    output_file.write("        {%02d, %02d, %02d, %02d, %02d, %02d, texture=\"%s\"},\n" % (
+                    output_file.write("        {%02d, %02d, %02d, %02d, %02d, %02d, texture=\"%s\", tint = %s},\n" % (
                         bot_corner_pos[0], bot_corner_pos[1], bot_corner_pos[2],
                         top_corner_pos[0], top_corner_pos[1], top_corner_pos[2],
-                        _obj.active_material.name if _obj.active_material else "planks_oak"
+                        _obj.active_material.name if _obj.active_material else "planks_oak",
+                        object_tint if bpy.types.Scene.f0x_3dm_tint_param else '0x000000'
                     ))
 
         # Write footer
@@ -145,10 +212,10 @@ def generate_mc3d_file( file_path ):
         output_file.write("}\n")
 
 # Class to handle file save dialog and 3DM file generation
-class f0x_export_mc3d(bpy.types.Operator):
+class f0x_export_3dm(bpy.types.Operator):
 
     # Properties
-    bl_idname = "f0x.export_mc3d"
+    bl_idname = "f0x.export_3dm"
     bl_label = "Export 3DM file"
     filepath = bpy.props.StringProperty(subtype="FILE_PATH")
     filter_glob = StringProperty(
@@ -161,7 +228,7 @@ class f0x_export_mc3d(bpy.types.Operator):
         return ( len( bpy.context.scene.objects ) > 0 )
 
     def execute(self, context):
-        generate_mc3d_file( self.filepath )
+        generate_3dm_file( self.filepath )
         return {'FINISHED'}
 
     def invoke(self, context, event):
@@ -193,7 +260,7 @@ def deselect_all():
             _obj.select = False
 
 # Function to find bounding box
-def bb_find():
+def boundingbox_find():
 
     # Iterate over scene objects
     for _obj in bpy.data.objects:
@@ -208,15 +275,15 @@ def bb_find():
                 return _obj
 
 # Function to add a bounding box
-class f0x_bb_add(bpy.types.Operator):
+class f0x_boundingbox_add(bpy.types.Operator):
 
     # Properties
-    bl_idname = "f0x.bb_add"
+    bl_idname = "f0x.boundingbox_add"
     bl_label = "Add a bounding box"
 
     @classmethod
     def poll(cls, context):
-        return ( bb_find() == None ) and ( bpy.context.active_object.mode == 'OBJECT' )
+        return ( boundingbox_find() == None ) and ( bpy.context.active_object.mode == 'OBJECT' )
 
     def execute(self, context):
         
@@ -247,15 +314,15 @@ class f0x_bb_add(bpy.types.Operator):
         return {'FINISHED'}
 
 # Function to remove a bounding box
-class f0x_bb_remove(bpy.types.Operator):
+class f0x_boundingbox_remove(bpy.types.Operator):
 
     # Properties
-    bl_idname = "f0x.bb_remove"
+    bl_idname = "f0x.boundingbox_remove"
     bl_label = "Remove a bounding box"
 
     @classmethod
     def poll(cls, context):
-        return ( bb_find() != None ) and ( bpy.context.active_object.mode == 'OBJECT' )
+        return ( boundingbox_find() != None ) and ( bpy.context.active_object.mode == 'OBJECT' )
 
     def execute(self, context):
 
@@ -263,7 +330,7 @@ class f0x_bb_remove(bpy.types.Operator):
         deselect_all()
 
         # Find bounding box
-        bbox = bb_find()
+        bbox = boundingbox_find()
 
         # If there is a bounding box
         if bbox:
@@ -276,7 +343,7 @@ class f0x_bb_remove(bpy.types.Operator):
         return {'FINISHED'}
 
 # Class to handle panel drawing
-class LayoutDemoPanel(bpy.types.Panel):
+class MainPanel(bpy.types.Panel):
 
     # Properties
     bl_label = "OpenComputers 3DM Exporter"
@@ -287,32 +354,49 @@ class LayoutDemoPanel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-
-        layout.label(text="Export")
+        
+        layout.label(text="Object export settings")
         row = layout.row()
-        row.scale_y = 1.0
-        row.operator("f0x.export_mc3d", text = "Export")
+        row.prop(context.scene, "f0x_3dm_tint_param")
+        
+        layout.label(text="3DM model settings")
+        row = layout.row()
+        row.prop(context.scene, "f0x_3dm_label_param")
+        row = layout.row()
+        row.prop(context.scene, "f0x_3dm_tooltip_param")
+        row = layout.row()
+        row.prop(context.scene, "f0x_3dm_lightlevel_param")
+        row = layout.row()
+        row.prop(context.scene, "f0x_3dm_emitredstone_param")
+        row.prop(context.scene, "f0x_3dm_buttonmode_param")
+        row.prop(context.scene, "f0x_3dm_collidable_param")
 
         layout.label(text="Bounding box")
         row = layout.row()
         row.scale_y = 1.0
-        row.operator("f0x.bb_add", text = "Add")
-        row.operator("f0x.bb_remove", text = "Remove")
-
+        row.operator("f0x.boundingbox_add", text = "Add")
+        row.operator("f0x.boundingbox_remove", text = "Remove")
+        
+        layout.label(text="Export")
+        row = layout.row()
+        row.scale_y = 2.0
+        row.operator("f0x.export_3dm", text = "Export")
 
 # Function to register module
 def register():
-    bpy.utils.register_class(f0x_export_mc3d)
-    bpy.utils.register_class(f0x_bb_add)
-    bpy.utils.register_class(f0x_bb_remove)
-    bpy.utils.register_class(LayoutDemoPanel)
+    initProps()
+    bpy.utils.register_class(f0x_export_3dm)
+    bpy.utils.register_class(f0x_boundingbox_add)
+    bpy.utils.register_class(f0x_boundingbox_remove)
+    bpy.utils.register_class(MainPanel)
 
 # Function to unregister module
 def unregister():
-    bpy.utils.unregister_class(f0x_export_mc3d)
-    bpy.utils.unregister_class(f0x_bb_add)
-    bpy.utils.unregister_class(f0x_bb_remove)
-    bpy.utils.unregister_class(LayoutDemoPanel)
+    unloadProps()
+    bpy.utils.unregister_class(f0x_export_3dm)
+    bpy.utils.unregister_class(f0x_boundingbox_add)
+    bpy.utils.unregister_class(f0x_boundingbox_remove)
+    bpy.utils.unregister_class(MainPanel)
 
 # Entry point
 if __name__ == "__main__":
