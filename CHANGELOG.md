@@ -1,6 +1,12 @@
 
 ## Changelog
 
+### 1.2.0 (January 8, 2016)
+
+- `ADDED` States support! You can assign states for each objects and simulate it
+- `ADDED` Some options to control exportations with layers
+- `FIXED` Various bugfixes & optimisations
+
 ### 1.1.0 (January 8, 2016)
 
 - `ADDED` 3DM model parameters settings ( label, tooltip, lightLevel, emitRedstone, buttonMode, collidable )
