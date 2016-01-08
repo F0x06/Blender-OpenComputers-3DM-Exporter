@@ -37,7 +37,7 @@ Activate plugin:
 * Bounding boxes to view the build area ( 16 x 16 x 16 )
 * Layers support, only export the active layer so you can easily create multi-part models
 * Material name and tint ( diffuse color ) export in 3DM file
-* States support, assign states to your object and simulate it directly in blender
+* States support, assign states to your objects and simulate it directly in blender
 
 ### Usage
 
