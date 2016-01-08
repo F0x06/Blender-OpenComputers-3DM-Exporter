@@ -11,8 +11,8 @@ Please read the [COPYRIGHT.md](COPYRIGHT.md) file for more information.
 
 ### Screenshots
 
-![](http://image.noelshack.com/fichiers/2016/01/1452209866-20160107232850787.jpeg)
-![](http://image.noelshack.com/fichiers/2016/01/1452209873-20160107233113573.jpeg)
+![](http://image.noelshack.com/fichiers/2016/01/1452283535-20160107232850787.jpeg)
+![](http://image.noelshack.com/fichiers/2016/01/1452283540-20160107233113573.jpeg)
 
 ### Requirements
 
