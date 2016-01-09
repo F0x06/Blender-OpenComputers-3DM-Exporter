@@ -11,8 +11,8 @@ Please read the [COPYRIGHT.md](COPYRIGHT.md) file for more information.
 
 ### Screenshots
 
-![](http://image.noelshack.com/fichiers/2016/01/1452209866-20160107232850787.jpeg)
-![](http://image.noelshack.com/fichiers/2016/01/1452209873-20160107233113573.jpeg)
+![](http://image.noelshack.com/fichiers/2016/01/1452283535-20160107232850787.jpeg)
+![](http://image.noelshack.com/fichiers/2016/01/1452283540-20160107233113573.jpeg)
 
 ### Requirements
 
@@ -36,7 +36,8 @@ Activate plugin:
 
 * Bounding boxes to view the build area ( 16 x 16 x 16 )
 * Layers support, only export the active layer so you can easily create multi-part models
-* Material name export in 3DM file
+* Material name and tint ( diffuse color ) export in 3DM file
+* States support, assign states to your objects and simulate it directly in blender
 
 ### Usage
 
