@@ -38,7 +38,7 @@ from bpy.props import ( StringProperty, BoolProperty, IntProperty )
 bl_info = {
     'name': 'OpenComputers 3DM Exporter',
     'author': 'Kevin Velickovic (F0x06)',
-    'version': (1, 2, 0),
+    'version': (1, 2, 1),
     'blender': (2, 76, 0),
     'location': 'Scene properties > Minecarft OpenComputers 3D exporter',
     'description': 'Export voxel model to OpenComputers 3DM format',
