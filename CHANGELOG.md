@@ -6,7 +6,6 @@
 - `FIXED` collidable variable synthax
 - `FIXED` default color
 
-
 ### 1.2.0 (January 8, 2016)
 
 - `ADDED` States support! You can assign states for each objects and simulate it
