@@ -79,8 +79,11 @@ def initProps():
     bpy.types.Scene.f0x_3dm_buttonmode_param = BoolProperty(
         name="Button mode",
         default = False )  
-    bpy.types.Scene.f0x_3dm_collidable_param = BoolProperty(
-        name="Collidable",
+    bpy.types.Scene.f0x_3dm_collidable_on_param = BoolProperty(
+        name="Collidable when on",
+        default = True )  
+    bpy.types.Scene.f0x_3dm_collidable_off_param = BoolProperty(
+        name="Collidable when off",
         default = True )  
         
     # Object properties
@@ -195,12 +198,12 @@ def generate_3dm_file( file_path ):
 
         # Write 3DM header
         output_file.write("{\n")
-        output_file.write("    label = \"%s\",\n"    % ( scene.f0x_3dm_label_param ) )
-        output_file.write("    tooltip = \"%s\",\n"  % ( scene.f0x_3dm_tooltip_param ) )
-        output_file.write("    lightLevel = %d,\n"   % ( scene.f0x_3dm_lightlevel_param ) )
-        output_file.write("    emitRedstone = %s,\n" % ( "true" if scene.f0x_3dm_emitredstone_param else "false" ) )
-        output_file.write("    buttonMode = %s,\n"   % ( "true" if scene.f0x_3dm_buttonmode_param else "false" ) )
-        output_file.write("    collidable = %s,\n"   % ( "true" if scene.f0x_3dm_collidable_param else "false" ) )
+        output_file.write("    label = \"%s\",\n"          % ( scene.f0x_3dm_label_param ) )
+        output_file.write("    tooltip = \"%s\",\n"        % ( scene.f0x_3dm_tooltip_param ) )
+        output_file.write("    lightLevel = %d,\n"         % ( scene.f0x_3dm_lightlevel_param ) )
+        output_file.write("    emitRedstone = %s,\n"       % ( "true" if scene.f0x_3dm_emitredstone_param else "false" ) )
+        output_file.write("    buttonMode = %s,\n"         % ( "true" if scene.f0x_3dm_buttonmode_param else "false" ) )
+        output_file.write("    collidable = {%s, %s},\n"   % ( "true" if scene.f0x_3dm_collidable_on_param else "false", "true" if scene.f0x_3dm_collidable_off_param else "false" ) )
         
         output_file.write("    shapes={\n")
 
@@ -219,7 +222,7 @@ def generate_3dm_file( file_path ):
             top_corner_pos = get_top_vertex( _obj )
             
             # Tint variable
-            object_tint = '0x000000'
+            object_tint = '0xffffff'
             
             # Check if object have material
             if _obj.active_material:
@@ -488,7 +491,9 @@ class MainPanel(bpy.types.Panel):
         row = layout.row()
         row.prop(context.scene, "f0x_3dm_emitredstone_param")
         row.prop(context.scene, "f0x_3dm_buttonmode_param")
-        row.prop(context.scene, "f0x_3dm_collidable_param")
+        row = layout.row()
+        row.prop(context.scene, "f0x_3dm_collidable_on_param")
+        row.prop(context.scene, "f0x_3dm_collidable_off_param")
         row = layout.row()
         
         # State settings
